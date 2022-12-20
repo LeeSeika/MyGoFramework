@@ -1,5 +1,10 @@
 package main
 
+import (
+	"github.com/godemo/coredemo/bizController"
+	"github.com/godemo/coredemo/framework/gin"
+)
+
 //import "coredemo/framework"
 //
 //func registerRouter(core *framework.Core) {
@@ -14,3 +19,7 @@ package main
 //		group.DeleteDynamic("/deleteDemo", DeleteDemoController)
 //	}
 //}
+
+func registerRouter(core *gin.Engine) {
+	core.GET("/subject/foo", bizController.SubjectController)
+}
