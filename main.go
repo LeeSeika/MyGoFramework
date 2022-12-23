@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/godemo/coredemo/app/provider/demoProvider"
-	"github.com/godemo/coredemo/framework/gin"
-	"log"
-	"net/http"
+	app2 "github.com/godemo/coredemo/app"
+	"github.com/godemo/coredemo/app/console"
+	"github.com/godemo/coredemo/framework"
+	"github.com/godemo/coredemo/framework/provider/app"
+	"github.com/godemo/coredemo/framework/provider/kernel"
 )
 
 func main() {
@@ -21,17 +22,24 @@ func main() {
 	//	return
 	//}
 	fmt.Println("hello")
-	core := gin.New()
-	core.Bind(&demoProvider.DemoProvider{})
-
-	registerRouter(core)
-	server := &http.Server{
-		Handler: core,
-		Addr:    ":8081",
-	}
-	err := server.ListenAndServe()
+	//core := gin.New()
+	//core.Bind(&demoProvider.DemoProvider{})
+	//
+	//registerRouter(core)
+	//server := &http.Server{
+	//	Handler: core,
+	//	Addr:    ":8081",
+	//}
+	//err := server.ListenAndServe()
+	//if err != nil {
+	//	log.Fatal(err)
+	//	return
+	//}
+	container := framework.NewHadeContainer()
+	container.Bind(&app.HadeAppProvider{})
+	engine, err := app2.NewHttpEngine()
 	if err != nil {
-		log.Fatal(err)
-		return
+		container.Bind(&kernel.HadeKernelProvider{HttpEngine: engine})
 	}
+	console.RunCommand(container)
 }

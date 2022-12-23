@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/godemo/coredemo/framework"
+	"github.com/robfig/cron/v3"
 	"io"
 	"os"
 	"path/filepath"
@@ -223,8 +224,12 @@ type Command struct {
 	// SuggestionsMinimumDistance defines minimum levenshtein distance to display suggestions.
 	// Must be > 0.
 	SuggestionsMinimumDistance int
-	
+
 	container framework.Container
+
+	Cron *cron.Cron
+
+	//CronSpecs []CronSpec
 }
 
 // Context returns underlying command context. If command wasn't

@@ -9,12 +9,8 @@ type DemoProvider struct {
 	framework.ServiceProvider
 }
 
-func (ds *DemoService) GetFoo() Foo {
-	return Foo{Name: "My name is Foo"}
-}
-
 func (demoProvider *DemoProvider) Name() string {
-	return Key
+	return DemoBizKey
 }
 
 func (demoProvider *DemoProvider) Register(c framework.Container) framework.NewInstance {
@@ -31,6 +27,6 @@ func (demoProvider *DemoProvider) IsDefer() bool {
 
 func (demoProvider *DemoProvider) Boot(c framework.Container) error {
 	// log
-	fmt.Println("prepare to bind " + Key)
+	fmt.Println("prepare to bind " + DemoBizKey)
 	return nil
 }
