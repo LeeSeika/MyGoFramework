@@ -229,7 +229,7 @@ type Command struct {
 
 	Cron *cron.Cron
 
-	//CronSpecs []CronSpec
+	CronSpecs []CronSpec
 }
 
 // Context returns underlying command context. If command wasn't
