@@ -2,6 +2,7 @@ package framework
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 )
 
@@ -30,9 +31,9 @@ func NewHadeContainer() *HadeContainer {
 
 func (ctn *HadeContainer) Bind(provider ServiceProvider) error {
 	ctn.lock.Lock()
-	defer ctn.lock.Unlock()
 	key := provider.Name()
 	ctn.providers[key] = provider
+	ctn.lock.Unlock()
 
 	if provider.IsDefer() == false {
 		err := provider.Boot(ctn)
@@ -76,10 +77,14 @@ func (ctn *HadeContainer) MakeNew(key string, params []interface{}) (interface{}
 
 func (ctn *HadeContainer) make(key string, params []interface{}, forceNew bool) (interface{}, error) {
 	ctn.lock.RLock()
-	defer ctn.lock.RUnlock()
+	defer func() {
+		ctn.lock.RUnlock()
+		//fmt.Println("error!!!!!!!!!!!!!!!")
+	}()
 
 	provider := ctn.findServiceProvider(key)
 	if provider == nil {
+		fmt.Println("error!!!!!!!!!!!!!!!")
 		return nil, errors.New("provider " + key + " not found")
 	}
 
@@ -97,7 +102,7 @@ func (ctn *HadeContainer) make(key string, params []interface{}, forceNew bool) 
 	}
 
 	ctn.instances[key] = instance
-	return ctn.newInstance(provider, nil)
+	return instance, nil
 }
 
 func (ctn *HadeContainer) newInstance(provider ServiceProvider, params []interface{}) (interface{}, error) {

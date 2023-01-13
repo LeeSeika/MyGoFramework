@@ -1,10 +1,10 @@
 package console
 
 import (
-	"github.com/godemo/coredemo/app/console/command"
 	"github.com/godemo/coredemo/app/console/command/demo"
 	"github.com/godemo/coredemo/framework"
 	"github.com/godemo/coredemo/framework/cobra"
+	"github.com/godemo/coredemo/framework/command"
 )
 
 func RunCommand(container framework.Container) error {

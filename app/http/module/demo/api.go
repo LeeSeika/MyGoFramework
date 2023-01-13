@@ -2,6 +2,7 @@ package demo
 
 import (
 	demoService "github.com/godemo/coredemo/app/provider/demoProvider"
+	"github.com/godemo/coredemo/framework/contract"
 	"github.com/godemo/coredemo/framework/gin"
 )
 
@@ -18,8 +19,9 @@ func Register(engine *gin.Engine) error {
 	api := NewDemoApi()
 	engine.Bind(&demoService.DemoProvider{})
 	engine.GET("demo/demo", api.DemoBizApi)
-	engine.GET("/demo/demo2", api.DemoBizApi2)
-	engine.POST("/demo/demo_post", api.DemoPostApi)
+	engine.GET("demo/demo2", api.DemoBizApi2)
+	engine.POST("demo/demo_post", api.DemoPostApi)
+	engine.GET("demo/demo_config", api.DemoConfigApi)
 	return nil
 }
 
@@ -46,4 +48,10 @@ func (da *DemoApi) DemoPostApi(context *gin.Context) {
 		context.AbortWithError(500, err)
 	}
 	context.JSON(200, nil)
+}
+
+func (da *DemoApi) DemoConfigApi(context *gin.Context) {
+	configService := context.MustMake(contract.ConfigKey).(contract.Config)
+	pwd := configService.GetString("database.mysql.password")
+	context.JSON(200, pwd)
 }

@@ -1,5 +1,5 @@
-package main
+package services
 
-func main() {
-
+func NewHadeCustomLog(params ...interface{}) (interface{}, error) {
+	return nil, nil
 }

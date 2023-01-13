@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"fmt"
 	"github.com/godemo/coredemo/framework/cobra"
 	"github.com/godemo/coredemo/framework/contract"
 	"log"
@@ -15,6 +16,10 @@ import (
 // initAppCommand 初始化app命令和其子命令
 func initAppCommand() *cobra.Command {
 	appCommand.AddCommand(appStartCommand)
+	err := appStartCommand.Execute()
+	if err != nil {
+		fmt.Println(err)
+	}
 	return appCommand
 }
 

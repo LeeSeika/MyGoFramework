@@ -12,4 +12,5 @@ type App interface {
 	CommandFolder() string
 	RuntimeFolder() string
 	TestFolder() string
+	LoadAppConfig(map[string]string)
 }
