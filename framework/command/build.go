@@ -19,7 +19,7 @@ var buildCommand = &cobra.Command{
 }
 
 var buildSelfCommand = &cobra.Command{
-	Use:   "",
+	Use:   "self",
 	Short: "",
 	RunE: func(c *cobra.Command, args []string) error {
 		path, err := exec.LookPath("go")

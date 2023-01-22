@@ -1,6 +1,7 @@
 package demo
 
 import (
+	"fmt"
 	demoService "github.com/godemo/coredemo/app/provider/demoProvider"
 	"github.com/godemo/coredemo/framework/contract"
 	"github.com/godemo/coredemo/framework/gin"
@@ -29,6 +30,8 @@ func (da *DemoApi) DemoBizApi(context *gin.Context) {
 	users := da.service.GetUsers()
 	userDTOs := UserModelsToUserDTOs(users)
 	context.JSON(200, userDTOs)
+	fmt.Println(userDTOs)
+	//context.JSON(200, "userDTOs")
 }
 
 func (da *DemoApi) DemoBizApi2(context *gin.Context) {

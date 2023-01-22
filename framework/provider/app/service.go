@@ -2,7 +2,6 @@ package app
 
 import (
 	"errors"
-	"flag"
 	"github.com/godemo/coredemo/framework"
 	"github.com/godemo/coredemo/framework/util"
 	"path/filepath"
@@ -23,12 +22,7 @@ func (ha HadeApp) BaseFolder() string {
 	if ha.baseFolder != "" {
 		return ha.baseFolder
 	}
-	var baseFolder string
-	flag.StringVar(&baseFolder, "base_folder", "", "base_folder参数，默认是当前路径")
-	flag.Parse()
-	if baseFolder != "" {
-		return baseFolder
-	}
+
 	return util.GetExecDirectory()
 }
 
@@ -59,7 +53,7 @@ func (h HadeApp) ConsoleFolder() string {
 	if value, ok := h.configMap["console_folder"]; ok {
 		return value
 	}
-	return filepath.Join(h.BaseFolder(), "console")
+	return filepath.Join(h.BaseFolder(), "app", "console")
 }
 
 func (h HadeApp) StorageFolder() string {
@@ -74,7 +68,7 @@ func (h HadeApp) ProviderFolder() string {
 	if value, ok := h.configMap["provider_folder"]; ok {
 		return value
 	}
-	return filepath.Join(h.BaseFolder(), "provider")
+	return filepath.Join(h.BaseFolder(), "app", "provider")
 }
 
 // MiddlewareFolder 定义业务自己定义的中间件
@@ -107,6 +101,13 @@ func (h HadeApp) TestFolder() string {
 		return value
 	}
 	return filepath.Join(h.BaseFolder(), "test")
+}
+
+func (app *HadeApp) AppFolder() string {
+	if value, ok := app.configMap["app_folder"]; ok {
+		return value
+	}
+	return filepath.Join(app.BaseFolder(), "app")
 }
 
 func NewHadeAppService(params ...interface{}) (interface{}, error) {

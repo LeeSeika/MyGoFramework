@@ -10,8 +10,8 @@ import (
 func RunCommand(container framework.Container) error {
 	// 创建根命令
 	var rootCommand = &cobra.Command{
-		Use:   "hade",
-		Short: "hade命令",
+		Use:   "coredemo",
+		Short: "coredemo命令",
 		Long:  "hade 框架提供的命令行工具，使用这个命令行工具能很方便执行框架自带命令，也能很方便编写业务命令",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cmd.InitDefaultHelpFlag()

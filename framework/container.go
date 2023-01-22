@@ -131,3 +131,11 @@ func (ctn *HadeContainer) findServiceProvider(key string) ServiceProvider {
 	}
 	return nil
 }
+
+func (ctn *HadeContainer) NameList() []string {
+	var ret []string
+	for _, provider := range ctn.providers {
+		ret = append(ret, provider.Name())
+	}
+	return ret
+}

@@ -53,8 +53,14 @@ func main() {
 		container.Bind(&kernel.HadeKernelProvider{HttpEngine: engine})
 	}
 	container.Bind(&config.HadeConfigProvider{})
+
 	console.RunCommand(container)
 	// startServer(container)
+	//proxy := command.NewProxy(container)
+	//go proxy.MonitorBackend()
+	//if err := proxy.StartProxy(true, true); err != nil {
+	//
+	//}
 }
 
 func startServer(container framework.Container) {
