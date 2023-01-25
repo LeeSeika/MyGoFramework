@@ -10,6 +10,7 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/golang/protobuf v1.5.2
+	github.com/google/go-github/v39 v39.1.0
 	github.com/inconshreveable/mousetrap v1.1.0
 	github.com/jianfengye/collection v1.4.1
 	github.com/json-iterator/go v1.1.12
@@ -39,6 +40,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jonboulle/clockwork v0.3.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
