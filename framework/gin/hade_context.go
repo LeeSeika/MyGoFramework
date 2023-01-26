@@ -34,3 +34,7 @@ func (engine *Engine) IsBind(key string) bool {
 func (engine *Engine) SetContainer(container framework.Container) {
 	engine.container = container
 }
+
+func (engine *Engine) GetContainer() framework.Container {
+	return engine.container
+}

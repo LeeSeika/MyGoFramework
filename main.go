@@ -11,56 +11,52 @@ import (
 	"github.com/godemo/coredemo/framework/provider/config"
 	"github.com/godemo/coredemo/framework/provider/env"
 	"github.com/godemo/coredemo/framework/provider/kernel"
+	"github.com/swaggo/swag/gen"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 )
 
 func main() {
-	//core := gin.NewCore()
-	//registerRouter(core)
-	//server := &http.Server{
-	//	Handler: core,
-	//	Addr:    ":8081",
-	//}
-	//err := server.ListenAndServe()
-	//if err != nil {
-	//	log.Fatal(err)
-	//	return
-	//}
-	fmt.Println("hello")
-	//core := gin.New()
-	//core.Bind(&demoProvider.DemoProvider{})
-	//
-	//registerRouter(core)
-	//server := &http.Server{
-	//	Handler: core,
-	//	Addr:    ":8081",
-	//}
-	//err := server.ListenAndServe()
-	//if err != nil {
-	//	log.Fatal(err)
-	//	return
-	//}
+
 	container := framework.NewHadeContainer()
 	container.Bind(&app.HadeAppProvider{})
 	container.Bind(&env.HadeEnvProvider{})
-	engine, err := app2.NewHttpEngine()
+	container.Bind(&config.HadeConfigProvider{})
+	engine, err := app2.NewHttpEngine(container)
 	if err == nil {
 		container.Bind(&kernel.HadeKernelProvider{HttpEngine: engine})
 	}
-	container.Bind(&config.HadeConfigProvider{})
 
 	console.RunCommand(container)
-	// startServer(container)
-	//proxy := command.NewProxy(container)
-	//go proxy.MonitorBackend()
-	//if err := proxy.StartProxy(true, true); err != nil {
-	//
-	//}
+	//testSwagger(container)
+}
+
+func testSwagger(container framework.Container) {
+	appService := container.MustMake(contract.AppKey).(contract.App)
+	outputDir := filepath.Join(appService.AppFolder(), "http", "swagger")
+	httpDir := filepath.Join(appService.AppFolder(), "http")
+	conf := &gen.Config{
+		SearchDir:          httpDir,
+		Excludes:           "",
+		MainAPIFile:        "swagger.go",
+		OutputDir:          outputDir,
+		PropNamingStrategy: "",
+		ParseVendor:        false,
+		ParseDependency:    false,
+		ParseInternal:      false,
+		MarkdownFilesDir:   "",
+		GeneratedTime:      false,
+		OutputTypes:        []string{"json", "yaml", "go"},
+	}
+	err := gen.New().Build(conf)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func startServer(container framework.Container) {

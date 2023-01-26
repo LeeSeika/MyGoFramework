@@ -34,6 +34,13 @@ func (da *DemoApi) DemoBizApi(context *gin.Context) {
 	//context.JSON(200, "userDTOs")
 }
 
+// DemoBizApi2 Demo2 for godoc
+// @Summary 获取所有学生
+// @Description 获取所有学生，不进行分页
+// @Produce json
+// @Tags demo
+// @Success 200 {array} []UserDTO
+// @Router /demo/demo2 [get]
 func (da *DemoApi) DemoBizApi2(context *gin.Context) {
 	demoService := context.MustMake(demoService.DemoBizKey).(demoService.IService)
 	students := demoService.GetAllStudent()
