@@ -14,4 +14,5 @@ type App interface {
 	TestFolder() string
 	AppFolder() string
 	LoadAppConfig(map[string]string)
+	PidFolder() string
 }

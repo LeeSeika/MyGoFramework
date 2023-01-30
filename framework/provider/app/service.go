@@ -124,3 +124,10 @@ func (ha *HadeApp) LoadAppConfig(kv map[string]string) {
 		ha.configMap[key] = val
 	}
 }
+
+func (ha *HadeApp) PidFolder() string {
+	if value, ok := ha.configMap["pid_folder"]; ok {
+		return value
+	}
+	return filepath.Join(ha.BaseFolder(), "pid")
+}
