@@ -19,39 +19,39 @@ type HadeLog struct {
 }
 
 func (hl *HadeLog) IsLevelEnable(level contract.LogLevel) bool {
-	return level == contract.DebugLevel || level == contract.FatalLevel || level == contract.InfoLevel || level == contract.TraceLevel || level == contract.UnknownLevel || level == contract.WarnLevel || level == contract.ErrorLevel
+	return level <= hl.level
 }
 
 func (hl *HadeLog) Info(ctx context.Context, msg string, fields map[string]interface{}) {
-
+	hl.logf(contract.InfoLevel, ctx, msg, fields)
 }
 
 func (hl *HadeLog) Panic(ctx context.Context, msg string, fields map[string]interface{}) {
-
+	hl.logf(contract.PanicLevel, ctx, msg, fields)
 }
 func (hl *HadeLog) Fatal(ctx context.Context, msg string, fields map[string]interface{}) {
-
+	hl.logf(contract.FatalLevel, ctx, msg, fields)
 }
 func (hl *HadeLog) Error(ctx context.Context, msg string, fields map[string]interface{}) {
-
+	hl.logf(contract.PanicLevel, ctx, msg, fields)
 }
 func (hl *HadeLog) Warn(ctx context.Context, msg string, fields map[string]interface{}) {
-
+	hl.logf(contract.PanicLevel, ctx, msg, fields)
 }
 func (hl *HadeLog) Debug(ctx context.Context, msg string, fields map[string]interface{}) {
-
+	hl.logf(contract.PanicLevel, ctx, msg, fields)
 }
 func (hl *HadeLog) Trace(ctx context.Context, msg string, fields map[string]interface{}) {
-
+	hl.logf(contract.PanicLevel, ctx, msg, fields)
 }
 func (hl *HadeLog) SetLevel(level contract.LogLevel) {
-
+	hl.level = level
 }
 func (hl *HadeLog) SetCtxFielder(handler contract.CtxFielder) {
-
+	hl.ctxFielder = handler
 }
 func (hl *HadeLog) SetFormatter(formatter contract.Formatter) {
-
+	hl.formatter = formatter
 }
 
 func (hl *HadeLog) SetOutput(output io.Writer) {
