@@ -1,10 +1,13 @@
 package demo
 
 import (
+	"database/sql"
 	"fmt"
 	demoService "github.com/godemo/coredemo/app/provider/demoProvider"
 	"github.com/godemo/coredemo/framework/contract"
 	"github.com/godemo/coredemo/framework/gin"
+	"github.com/godemo/coredemo/framework/provider/orm"
+	"time"
 )
 
 type DemoApi struct {
@@ -23,6 +26,7 @@ func Register(engine *gin.Engine) error {
 	engine.GET("demo/demo2", api.DemoBizApi2)
 	engine.POST("demo/demo_post", api.DemoPostApi)
 	engine.GET("demo/demo_config", api.DemoConfigApi)
+	engine.GET("demo/demo_orm", api.DemoOrm)
 	return nil
 }
 
@@ -64,4 +68,66 @@ func (da *DemoApi) DemoConfigApi(context *gin.Context) {
 	configService := context.MustMake(contract.ConfigKey).(contract.Config)
 	pwd := configService.GetString("database.mysql.password")
 	context.JSON(200, pwd)
+}
+
+func (da *DemoApi) DemoOrm(context *gin.Context) {
+	logService := context.MustMake(contract.LogKey).(contract.Log)
+	logService.Info(context, "request start", nil)
+
+	ormService := context.MustMake(contract.ORMKey).(contract.ORM)
+	db, err := ormService.GetDB(orm.WithConfigPath("database.default"))
+	if err != nil {
+		logService.Error(context, err.Error(), nil)
+		context.AbortWithError(500, err)
+		return
+	}
+	db.WithContext(context)
+
+	err = db.AutoMigrate(&UserForGorm{})
+	if err != nil {
+		context.AbortWithError(500, err)
+		return
+	}
+	logService.Info(context, "migrate ok", nil)
+
+	email := "additcd@qq.com"
+	name := "leeseika"
+	age := uint8(24)
+	brithday := time.Date(1999, 2, 25, 1, 1, 1, 1, time.Local)
+	user := &UserForGorm{
+		Name:         name,
+		Email:        &email,
+		Age:          age,
+		Birthday:     &brithday,
+		MemberNumber: sql.NullString{},
+		ActivatedAt:  sql.NullTime{},
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
+	}
+	err = db.Create(user).Error
+	logService.Info(context, "insert user", map[string]interface{}{
+		"err": err,
+		"id":  user.ID,
+	})
+
+	user.Name = "update"
+	err = db.Save(user).Error
+	logService.Info(context, "update user", map[string]interface{}{
+		"err": err,
+		"id":  user.ID,
+	})
+
+	queryUser := &UserForGorm{ID: user.ID}
+	err = db.First(queryUser).Error
+	logService.Info(context, "query user", map[string]interface{}{
+		"err": err,
+		"id":  user.ID,
+	})
+
+	err = db.Delete(queryUser).Error
+	logService.Info(context, "delete user", map[string]interface{}{
+		"err": err,
+		"id":  user.ID,
+	})
+	context.JSON(200, "ok")
 }

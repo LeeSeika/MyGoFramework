@@ -11,6 +11,8 @@ import (
 	"github.com/godemo/coredemo/framework/provider/config"
 	"github.com/godemo/coredemo/framework/provider/env"
 	"github.com/godemo/coredemo/framework/provider/kernel"
+	log2 "github.com/godemo/coredemo/framework/provider/log"
+	"github.com/godemo/coredemo/framework/provider/orm"
 	"github.com/swaggo/swag/gen"
 	"log"
 	"net/http"
@@ -27,6 +29,8 @@ func main() {
 	container.Bind(&app.HadeAppProvider{})
 	container.Bind(&env.HadeEnvProvider{})
 	container.Bind(&config.HadeConfigProvider{})
+	container.Bind(&orm.HadeOrmProvider{})
+	container.Bind(&log2.HadeLogProvider{})
 	engine, err := app2.NewHttpEngine(container)
 	if err == nil {
 		container.Bind(&kernel.HadeKernelProvider{HttpEngine: engine})
@@ -34,6 +38,12 @@ func main() {
 
 	console.RunCommand(container)
 	//testSwagger(container)
+	startServer(container)
+	testOrm(container)
+}
+
+func testOrm(container framework.Container) {
+	_, _ = http.Get("http://localhost:8888/demo/demo_orm")
 }
 
 func testSwagger(container framework.Container) {

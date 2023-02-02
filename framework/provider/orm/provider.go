@@ -8,7 +8,7 @@ import (
 type HadeOrmProvider struct {
 }
 
-func (hop *HadeOrmProvider) Register() framework.NewInstance {
+func (hop *HadeOrmProvider) Register(container framework.Container) framework.NewInstance {
 	return NewHadeOrmService
 }
 

@@ -10,11 +10,11 @@ import (
 
 const ORMKey = "hade:orm"
 
-type ORMService interface {
+type ORM interface {
 	GetDB(option ...DBOption) (*gorm.DB, error)
 }
 
-type DBOption func(service ORMService) error
+type DBOption func(service ORM)
 
 type DBConfig struct {
 	// 以下配置关于dsn

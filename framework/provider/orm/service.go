@@ -24,6 +24,13 @@ func NewHadeOrmService(params ...interface{}) (interface{}, error) {
 	return ormService, nil
 }
 
+func WithConfigPath(path string) contract.DBOption {
+	return func(orm contract.ORM) {
+		hadeGorm := orm.(*HadeOrmService)
+		hadeGorm.configPath = path
+	}
+}
+
 type HadeOrmService struct {
 	container  framework.Container
 	dbs        map[string]*gorm.DB
@@ -49,9 +56,7 @@ func (hos *HadeOrmService) GetBasicConfig(container framework.Container) *contra
 func (hos *HadeOrmService) GetDB(options ...contract.DBOption) (*gorm.DB, error) {
 
 	for _, opt := range options {
-		if err := opt(hos); err != nil {
-			return nil, err
-		}
+		opt(hos)
 	}
 
 	if hos.configPath == "" {
@@ -59,7 +64,7 @@ func (hos *HadeOrmService) GetDB(options ...contract.DBOption) (*gorm.DB, error)
 	}
 
 	logService := hos.container.MustMake(contract.LogKey).(contract.Log)
-	configService := hos.container.MustMake(contract.LogKey).(contract.Config)
+	configService := hos.container.MustMake(contract.ConfigKey).(contract.Config)
 
 	config := hos.GetBasicConfig(hos.container)
 	if err := configService.Load(hos.configPath, config); err != nil {
@@ -87,7 +92,7 @@ func (hos *HadeOrmService) GetDB(options ...contract.DBOption) (*gorm.DB, error)
 
 	var db *gorm.DB
 	var err error
-	switch config.Dsn {
+	switch config.Driver {
 	case "mysql":
 		db, err = gorm.Open(mysql.Open(config.Dsn))
 	case "postgres":
